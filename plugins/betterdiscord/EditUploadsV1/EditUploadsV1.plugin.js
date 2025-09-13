@@ -439,7 +439,13 @@ button[aria-label="${BTN_ARIA}"] svg{width:18px;height:18px;color:var(--brand-ex
           if(st.rgbMode==='static'){borderGlow.style.filter='none';borderGlow.style.animation='';borderGlow.style.boxShadow=`0 0 26px 14px ${st.rgbStatic}80`}
           else{borderGlow.style.filter='hue-rotate(0deg)';borderGlow.style.boxShadow='0 0 26px 14px rgba(255,0,0,.35)';applyGlowAnimation()}
         }
-        function burst(){ if(st.rgbMode!=='dynamic') return; borderGlow.style.animation='none'; borderGlow.offsetWidth; applyGlowAnimation(); }
+        // burst should not restart hue/breathe animations; instead pulse box-shadow temporarily using the existing .eu-burst transition
+        function burst(){
+          if(st.rgbMode!=='dynamic') return;
+          const prev = borderGlow.style.boxShadow;
+          borderGlow.style.boxShadow = '0 0 34px 22px rgba(255,0,0,.5)';
+          setTimeout(()=>{ borderGlow.style.boxShadow = prev },180);
+        }
 
         // tools
         function setTool(name){
